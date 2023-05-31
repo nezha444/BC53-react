@@ -32,6 +32,11 @@ export class Gallery extends Component {
     //         query: query
     this.setState({ query });
   };
+  handeClick = () => {
+    this.setState(prevState => ({
+      page: prevState.page + 1,
+    }));
+  };
   render() {
     const { photos } = this.state;
     return (
@@ -46,6 +51,7 @@ export class Gallery extends Component {
             </GridItem>
           ))}
         </Grid>
+        <Button onClick={this.handeClick}> load More</Button>
         <Text textAlign="center">Sorry. There are no images ... 😭</Text>
       </>
     );
