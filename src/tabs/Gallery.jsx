@@ -1,7 +1,8 @@
 import { Component } from 'react';
 
 import * as ImageService from 'service/image-service';
-import { Button, SearchForm, Grid, GridItem, Text, CardItem } from 'components';
+import { Button, SearchForm, Text, PhotosList, Loader } from 'components';
+
 console.log('ImageService :>> ', ImageService);
 export class Gallery extends Component {
   state = {
@@ -11,10 +12,13 @@ export class Gallery extends Component {
     showBtn: false,
     isEmpty: false,
     error: '',
+    isLoading: false
   };
-  componentDidUpdate(prevProps, prevState) {
+
+  componentDidUpdate(_, prevState) {
     const { query, page } = this.state;
     if (prevState.query !== query || prevState.page !== page) {
+      this.setState({isLoading: true})
       ImageService.getImages(query, page)
         .then(({ photos, total_results }) => {
           if (!photos.length) {
@@ -28,7 +32,10 @@ export class Gallery extends Component {
         })
         .catch(error => {
           this.setState({ error: error.message });
-        });
+        })
+        .finally(()=>{
+          this.setState({isLoading: false})}         
+        )
     }
   }
 
@@ -58,24 +65,17 @@ export class Gallery extends Component {
   };
 
   render() {
-    const { photos, showBtn, isEmpty, error } = this.state;
+    const { photos, showBtn, isEmpty, error, isLoading } = this.state;
     return (
       <>
         <SearchForm onSubmit={this.onSubmit} />
-        <Grid>
-          {photos.map(({ id, avg_color, alt, src }) => (
-            <GridItem key={id}>
-              <CardItem color={avg_color}>
-                <img src={src.large} alt={alt} />
-              </CardItem>
-            </GridItem>
-          ))}
-        </Grid>
+        {photos.length > 0 && <PhotosList photos={photos}/>}
         {showBtn && <Button onClick={this.handleClick}>Load more...</Button>}
         {isEmpty && (
           <Text textAlign="center">Sorry. There are no images ... 😭</Text>
         )}
         {error && <Text textAlign="center">Sorry. {error} ... 😭</Text>}
+        {isLoading && <Loader/>}
       </>
     );
   }
