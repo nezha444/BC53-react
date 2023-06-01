@@ -1,29 +1,35 @@
 import { Component } from 'react';
+import { Overlay } from 'components';
+import { createPortal } from 'react-dom';
 
+const modalRoot = document.querySelector('#modal-root');
 export class Modal extends Component {
+  // add key Esc for Close
+  componentDidMount() {
+    document.addEventListener('keydown', this.handleKeyDwn);
+  }
+  // remove Esc after Close
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleKeyDwn);
+  }
   handleOverlayClick = e => {
     if (e.target === e.currentTarget) {
-      this.props.onClose('');
+      this.props.modalClose('');
     }
   };
+
+  handleKeyDwn = e => {
+    if (e.key === 'Escape') {
+      this.props.modalClose('');
+    }
+  };
+
   render() {
-    return (
-      <div
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          alignItems: 'center',
-          justifyContent: 'center',
-          display: 'flex',
-          background: 'rgba(0, 0, 0, 0.6)',
-        }}
-        onClick={this.handleOverlayClick}
-      >
+    return createPortal(
+      <Overlay onClick={this.handleOverlayClick}>
         <img src={this.props.largeImageURL} alt="name" width="50%" />
-      </div>
+      </Overlay>,
+      modalRoot
     );
   }
 }
