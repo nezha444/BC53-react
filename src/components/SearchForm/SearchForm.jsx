@@ -18,6 +18,7 @@ export class SearchForm extends Component {
       return alert('введите текст')
     }
     this.props.onSubmit(this.state.search)
+    this.setState({search: ""})
   }
 
   render() {
