@@ -1,7 +1,14 @@
 import { Component } from 'react';
 
 import * as ImageService from 'service/image-service';
-import { Button, SearchForm, Text, PhotosList, Loader } from 'components';
+import {
+  Button,
+  SearchForm,
+  Text,
+  PhotosList,
+  Loader,
+  Modal,
+} from 'components';
 
 console.log('ImageService :>> ', ImageService);
 export class Gallery extends Component {
@@ -12,13 +19,14 @@ export class Gallery extends Component {
     showBtn: false,
     isEmpty: false,
     error: '',
-    isLoading: false
+    isLoading: false,
+    largeImageURL: '',
   };
 
   componentDidUpdate(_, prevState) {
     const { query, page } = this.state;
     if (prevState.query !== query || prevState.page !== page) {
-      this.setState({isLoading: true})
+      this.setState({ isLoading: true });
       ImageService.getImages(query, page)
         .then(({ photos, total_results }) => {
           if (!photos.length) {
@@ -33,9 +41,9 @@ export class Gallery extends Component {
         .catch(error => {
           this.setState({ error: error.message });
         })
-        .finally(()=>{
-          this.setState({isLoading: false})}         
-        )
+        .finally(() => {
+          this.setState({ isLoading: false });
+        });
     }
   }
 
@@ -63,19 +71,28 @@ export class Gallery extends Component {
       page: prev.page + 1,
     }));
   };
+  showModal = largeImageURL => {
+    this.setState({ largeImageURL });
+  };
 
   render() {
-    const { photos, showBtn, isEmpty, error, isLoading } = this.state;
+    const { photos, showBtn, isEmpty, error, isLoading, largeImageURL } =
+      this.state;
     return (
       <>
         <SearchForm onSubmit={this.onSubmit} />
-        {photos.length > 0 && <PhotosList photos={photos}/>}
+        {photos.length > 0 && (
+          <PhotosList photos={photos} showModal={this.showModal} />
+        )}
         {showBtn && <Button onClick={this.handleClick}>Load more...</Button>}
         {isEmpty && (
           <Text textAlign="center">Sorry. There are no images ... 😭</Text>
         )}
         {error && <Text textAlign="center">Sorry. {error} ... 😭</Text>}
-        {isLoading && <Loader/>}
+        {isLoading && <Loader />}
+        {largeImageURL && (
+          <Modal largeImageURL={largeImageURL} modalClose={this.showModal} />
+        )}
       </>
     );
   }
