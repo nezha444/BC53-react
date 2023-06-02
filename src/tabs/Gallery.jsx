@@ -9,91 +9,73 @@ import {
   Loader,
   Modal,
 } from 'components';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
-console.log('ImageService :>> ', ImageService);
-export class Gallery extends Component {
-  state = {
-    query: '',
-    page: 1,
-    photos: [],
-    showBtn: false,
-    isEmpty: false,
-    error: '',
-    isLoading: false,
-    largeImageURL: '',
-  };
+export const Gallery = () => {
+  const [query, setQuery] = useState('');
+  const [page, setPage] = useState(1);
+  const [photos, setPhotos] = useState([]);
+  const [showBtn, setShowBtn] = useState(false);
+  const [isEmpty, setIsEmpty] = useState(false);
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [largeImageURL, setLargeImageURL] = useState('');
 
-  componentDidUpdate(_, prevState) {
-    const { query, page } = this.state;
-    if (prevState.query !== query || prevState.page !== page) {
-      this.setState({ isLoading: true });
-      ImageService.getImages(query, page)
-        .then(({ photos, total_results }) => {
-          if (!photos.length) {
-            this.setState({ isEmpty: true });
-            return;
-          }
-          this.setState(prevState => ({
-            photos: [...prevState.photos, ...photos],
-            showBtn: page < Math.ceil(total_results / 15),
-          }));
-        })
-        .catch(error => {
-          this.setState({ error: error.message });
-        })
-        .finally(() => {
-          this.setState({ isLoading: false });
-        });
-    }
-  }
+  useEffect(() => {
+    if (!query) return;
+    setIsLoading(true);
+    ImageService.getImages(query, page)
+      .then(({ photos, total_results }) => {
+        if (!photos.length) {
+          setIsEmpty(true);
+          return;
+        }
+        setPhotos(prevState => [...prevState, ...photos]);
+        setShowBtn(page < Math.ceil(total_results / 15));
+      })
+      .catch(error => {
+        setError(error.message);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [page, query]);
 
-  onSubmit = query => {
-    if (this.state.query === query) {
+  const onSubmit = newQuery => {
+    if (query === newQuery) {
       return alert('Already shown');
     }
-    this.setState({
-      query,
-      page: 1,
-      photos: [],
-      showBtn: false,
-      isEmpty: false,
-      error: '',
-    });
+    setQuery(newQuery);
+    setPage(1);
+    setPhotos([]);
+    setShowBtn(false);
+    setIsEmpty(false);
+    setError('');
   };
-  handeClick = () => {
-    this.setState(prevState => ({
-      page: prevState.page + 1,
-    }));
+  const handleClick = () => {
+    setPage(prevState => prevState + 1);
   };
 
-  handleClick = () => {
-    this.setState(prev => ({
-      page: prev.page + 1,
-    }));
-  };
-  showModal = largeImageURL => {
-    this.setState({ largeImageURL });
+  const showModal = largeImageURL => {
+    setLargeImageURL(largeImageURL);
   };
 
-  render() {
-    const { photos, showBtn, isEmpty, error, isLoading, largeImageURL } =
-      this.state;
-    return (
-      <>
-        <SearchForm onSubmit={this.onSubmit} />
-        {photos.length > 0 && (
-          <PhotosList photos={photos} showModal={this.showModal} />
-        )}
-        {showBtn && <Button onClick={this.handleClick}>Load more...</Button>}
-        {isEmpty && (
-          <Text textAlign="center">Sorry. There are no images ... 😭</Text>
-        )}
-        {error && <Text textAlign="center">Sorry. {error} ... 😭</Text>}
-        {isLoading && <Loader />}
-        {largeImageURL && (
-          <Modal largeImageURL={largeImageURL} modalClose={this.showModal} />
-        )}
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <SearchForm onSubmit={onSubmit} />
+      {photos.length > 0 && (
+        <PhotosList photos={photos} showModal={showModal} />
+      )}
+      {showBtn && <Button onClick={handleClick}>Load more...</Button>}
+      {isEmpty && (
+        <Text textAlign="center">Sorry. There are no images ... 😭</Text>
+      )}
+      {error && <Text textAlign="center">Sorry. {error} ... 😭</Text>}
+      {isLoading && <Loader />}
+      {largeImageURL && (
+        <Modal largeImageURL={largeImageURL} modalClose={showModal} />
+      )}
+    </>
+  );
+};
