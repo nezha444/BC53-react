@@ -2,7 +2,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 
 import { Header, Section, Container, Text } from 'components';
-import { Gallery } from 'tabs';
+import { Gallery, Todos } from 'tabs';
 
 export const App = () => {
   return (
@@ -14,21 +14,19 @@ export const App = () => {
           <Tabs>
             <TabList>
               <Tab>
-                <Text>Gallery</Text>
-              </Tab>
-
-              <Tab>
                 <Text>Todos</Text>
+              </Tab>
+              <Tab>
+                <Text>Gallery</Text>
               </Tab>
             </TabList>
 
             <TabPanel>
+              <Todos />
+            </TabPanel>
+            <TabPanel>
               <Gallery />
             </TabPanel>
-
-            {/* <TabPanel>
-              <Todos />
-            </TabPanel> */}
           </Tabs>
         </Container>
       </Section>
