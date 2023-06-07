@@ -1,35 +1,18 @@
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import 'react-tabs/style/react-tabs.css';
-
-import { Header, Section, Container, Text } from 'components';
-import { Gallery, Todos } from 'tabs';
+import { Layout } from '../Layout/Layout';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import HomePage from 'pages/HomePage';
+import TodosPage from 'pages/TodosPage';
+import GalleryPage from 'pages/GalleryPage';
 
 export const App = () => {
   return (
-    <>
-      <Header />
-
-      <Section>
-        <Container>
-          <Tabs>
-            <TabList>
-              <Tab>
-                <Text>Todos</Text>
-              </Tab>
-              <Tab>
-                <Text>Gallery</Text>
-              </Tab>
-            </TabList>
-
-            <TabPanel>
-              <Todos />
-            </TabPanel>
-            <TabPanel>
-              <Gallery />
-            </TabPanel>
-          </Tabs>
-        </Container>
-      </Section>
-    </>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<HomePage />} />
+        <Route path="todos" element={<TodosPage />} />
+        <Route path="gallery" element={<GalleryPage />} />
+      </Route>
+      <Route path="*" element={<Navigate to="/" />} />
+    </Routes>
   );
 };
