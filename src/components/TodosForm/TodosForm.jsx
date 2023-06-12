@@ -4,10 +4,13 @@ import { FiSearch } from 'react-icons/fi';
 import { FormBtn, InputSearch, SearchFormStyled } from './TodosForm.styled';
 import { useDispatch, useSelector } from 'react-redux';
 import { addTodos } from 'redux/todoSlice';
+import { selectTodos } from 'redux/selectors';
 
-export const TodosForm = ({ onSubmit }) => {
+export const TodosForm = () => {
   const [search, setSearch] = useState('');
-  const dispatch = useDispatch() 
+  const todos = useSelector(selectTodos);
+
+  const dispatch = useDispatch();
   const handleChange = e => {
     setSearch(e.target.value);
   };
@@ -17,8 +20,15 @@ export const TodosForm = ({ onSubmit }) => {
     if (!search.trim()) {
       return alert('введите текст');
     }
-    const todo = { text:search, id: nanoid() };
-    dispatch(addTodos(todo))
+    const isExist = todos.some(
+      e => e.text.toLowerCase() === search.toLowerCase()
+    );
+    if (isExist) {
+      alert(`Todo ${search} already exists`);
+      return;
+    }
+    const todo = { text: search, id: nanoid() };
+    dispatch(addTodos(todo));
     setSearch('');
   };
 
