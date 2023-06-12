@@ -17,3 +17,4 @@ export * from 'components/PhotosList/PhotosList';
 export * from 'components/Loader/Loader';
 export * from 'components/Modal/Modal';
 export * from 'components/Overlay/Overlay.styled';
+export * from 'components/TodosForm/TodosForm';

@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { nanoid } from 'nanoid';
-import { Grid, GridItem, SearchForm, EditForm, Todo } from 'components';
+import { Grid, GridItem, TodosForm, EditForm, Todo } from 'components';
+
 import { useLocalStorage } from 'hooks/useLocalStorage';
+
 
 const LS_KEY = 'todos';
 export const Todos = () => {
@@ -18,7 +20,8 @@ export const Todos = () => {
       alert(`Todo ${text} already exists`);
       return;
     }
-    setTodos(prevTodos => [...prevTodos, todo]);
+    //  setTodos(prevTodos => [...prevTodos, todo]);
+
   };
 
   const handleDelete = id => {
@@ -47,7 +50,7 @@ export const Todos = () => {
           handleEdit={handleEdit}
         />
       ) : (
-        <SearchForm onSubmit={onSubmit} />
+        <TodosForm />
       )}
       <Grid>
         {todos.map((todo, index) => (
