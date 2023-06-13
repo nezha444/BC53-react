@@ -3,14 +3,23 @@ import { MdOutlineCancel } from 'react-icons/md';
 
 import { SearchFormStyled, FormBtn, InputSearch } from 'components';
 import { BtnEdit } from './EditForm.styled';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectCurrentTodo } from 'redux/selectors';
+import { editTodos, setIsEditing } from 'redux/todoSlice';
 
-export const EditForm = ({ handleEdit, currentTodo, onEdit }) => {
+export const EditForm = ({ handleEdit }) => {
+  const currentTodo = useSelector(selectCurrentTodo);
+  const dispatch = useDispatch();
   const handleSubmit = event => {
     event.preventDefault();
     const { edit } = event.target.elements;
-    onEdit(edit.value);
+    if (edit.value === currentTodo.value) {
+      alert(`Edit ${currentTodo.value}`);
+      return;
+    }
+    dispatch(editTodos(edit.value));
     event.target.reset();
-    handleEdit();
+    dispatch(setIsEditing());
   };
 
   return (

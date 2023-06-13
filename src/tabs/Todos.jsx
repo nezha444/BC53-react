@@ -1,13 +1,17 @@
 import { useState } from 'react';
 import { TodosForm, EditForm, TodosList } from 'components';
+import { selectIsEditing } from 'redux/selectors';
+import { useSelector } from 'react-redux';
 
 export const Todos = () => {
-  const [isEditing, setIsEditing] = useState(false);
+  const isEditing = useSelector(selectIsEditing);
+
+  // const [isEditing, setIsEditing] = useState(false);
   const [currentTodo, setCurrentTodo] = useState({});
 
   const handleEdit = todo => {
     setCurrentTodo(todo);
-    setIsEditing(prevState => !prevState);
+    // setIsEditing(prevState => !prevState);
   };
 
   // const onEdit = newText => {
