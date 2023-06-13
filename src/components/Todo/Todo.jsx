@@ -2,9 +2,9 @@ import { Text } from 'components';
 import { TodoWrapper, DeleteButton, EditButton } from './Todo.styled';
 import { RiDeleteBinLine, RiEdit2Line } from 'react-icons/ri';
 import { useDispatch } from 'react-redux';
-import { deleteTodos } from 'redux/todoSlice';
+import { addCurrentTodo, deleteTodos, setIsEditing } from 'redux/todoSlice';
 
-export const Todo = ({ id, text, counter, onDelete, clickEditBtn }) => {
+export const Todo = ({ id, text, counter }) => {
   const dispatch = useDispatch();
   return (
     <TodoWrapper>
@@ -15,7 +15,13 @@ export const Todo = ({ id, text, counter, onDelete, clickEditBtn }) => {
       <DeleteButton type="button" onClick={() => dispatch(deleteTodos(id))}>
         <RiDeleteBinLine size={24} />
       </DeleteButton>
-      <EditButton onClick={clickEditBtn} type="button">
+      <EditButton
+        onClick={() => {
+          dispatch(setIsEditing());
+          dispatch(addCurrentTodo({ id, text }));
+        }}
+        type="button"
+      >
         <RiEdit2Line size={24} />
       </EditButton>
     </TodoWrapper>
