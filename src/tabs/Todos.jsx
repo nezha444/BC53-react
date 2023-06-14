@@ -1,35 +1,23 @@
-import { useState } from 'react';
 import { TodosForm, EditForm, TodosList } from 'components';
-import { selectIsEditing } from 'redux/selectors';
-import { useSelector } from 'react-redux';
+import { selectIsEditing, selectIsLoading } from 'redux/selectors';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchTodos } from 'redux/operations';
+import { useEffect } from 'react';
+
 
 export const Todos = () => {
   const isEditing = useSelector(selectIsEditing);
-
-  // const [isEditing, setIsEditing] = useState(false);
-  const [currentTodo, setCurrentTodo] = useState({});
-
-  const handleEdit = todo => {
-    setCurrentTodo(todo);
-    // setIsEditing(prevState => !prevState);
-  };
-
-  // const onEdit = newText => {
-  //   setTodos(prevState =>
-  //     prevState.map(el =>
-  //       el.id === currentTodo.id ? { ...el, text: newText } : el
-  //     )
-  //   );
-  // };
+  const isLoading = useSelector(selectIsLoading);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchTodos())
+  }, [dispatch])
 
   return (
     <>
+      {isLoading && <p>Loading...</p>}
       {isEditing ? (
-        <EditForm
-          // onEdit={onEdit}
-          currentTodo={currentTodo}
-          handleEdit={handleEdit}
-        />
+        <EditForm/>
       ) : (
         <TodosForm />
       )}

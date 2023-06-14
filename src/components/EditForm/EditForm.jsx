@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectCurrentTodo } from 'redux/selectors';
 import { editTodos, setIsEditing } from 'redux/todoSlice';
 
-export const EditForm = ({ handleEdit }) => {
+export const EditForm = () => {
   const currentTodo = useSelector(selectCurrentTodo);
   const dispatch = useDispatch();
   const handleSubmit = event => {
@@ -24,7 +24,7 @@ export const EditForm = ({ handleEdit }) => {
 
   return (
     <SearchFormStyled onSubmit={handleSubmit}>
-      <BtnEdit onClick={handleEdit} type="button">
+      <BtnEdit type="button">
         <MdOutlineCancel size="16px" color="red" />
       </BtnEdit>
 
