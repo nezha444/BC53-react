@@ -1,10 +1,10 @@
-import { nanoid } from 'nanoid';
 import { useState } from 'react';
 import { FiSearch } from 'react-icons/fi';
 import { FormBtn, InputSearch, SearchFormStyled } from './TodosForm.styled';
 import { useDispatch, useSelector } from 'react-redux';
-import { addTodos } from 'redux/todoSlice';
 import { selectTodos } from 'redux/selectors';
+import { addTodo } from 'redux/operations';
+
 
 export const TodosForm = () => {
   const [search, setSearch] = useState('');
@@ -27,8 +27,9 @@ export const TodosForm = () => {
       alert(`Todo ${search} already exists`);
       return;
     }
-    const todo = { text: search, id: nanoid() };
-    dispatch(addTodos(todo));
+    const todo = { text: search};
+    const action = addTodo(todo)
+    dispatch(action);
     setSearch('');
   };
 
