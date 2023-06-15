@@ -10,8 +10,9 @@ import { editTodo } from 'redux/operations';
 
 export const EditForm = () => {
   const currentTodo = useSelector(selectCurrentTodo);
-  console.log('currentTodo', currentTodo);
+
   const dispatch = useDispatch();
+
   const handleSubmit = event => {
     event.preventDefault();
     const { edit } = event.target.elements;
@@ -27,7 +28,7 @@ export const EditForm = () => {
 
   return (
     <SearchFormStyled onSubmit={handleSubmit}>
-      <BtnEdit type="button">
+      <BtnEdit onClick={() => dispatch(setIsEditing())} type="button">
         <MdOutlineCancel size="16px" color="red" />
       </BtnEdit>
 

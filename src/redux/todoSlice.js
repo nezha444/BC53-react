@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { addTodo, deleteTodo, fetchTodos } from './operations';
+import { addTodo, deleteTodo, editTodo, fetchTodos } from './operations';
 
 const initialState = {
   items: [],
@@ -43,6 +43,15 @@ const todosSlice = createSlice({
     },
     [deleteTodo.fulfilled]: (state, action) => {
       state.items = state.items.filter(todo => todo.id !== action.payload.id);
+      state.isLoading = false;
+    },
+    [editTodo.pending]: state => {
+      state.isLoading = true;
+    },
+    [editTodo.fulfilled]: (state, action) => {
+      state.items = state.items.map(el =>
+        el.id === action.payload.id ? { ...el, text: action.payload.text } : el
+      );
       state.isLoading = false;
     },
   },
