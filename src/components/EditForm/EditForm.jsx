@@ -5,10 +5,12 @@ import { SearchFormStyled, FormBtn, InputSearch } from 'components';
 import { BtnEdit } from './EditForm.styled';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCurrentTodo } from 'redux/selectors';
-import { editTodos, setIsEditing } from 'redux/todoSlice';
+import { setIsEditing } from 'redux/todoSlice';
+import { editTodo } from 'redux/operations';
 
 export const EditForm = () => {
   const currentTodo = useSelector(selectCurrentTodo);
+  console.log('currentTodo', currentTodo);
   const dispatch = useDispatch();
   const handleSubmit = event => {
     event.preventDefault();
@@ -17,7 +19,8 @@ export const EditForm = () => {
       alert(`Edit ${currentTodo.value}`);
       return;
     }
-    dispatch(editTodos(edit.value));
+    const newTodo = { text: edit.value, id: currentTodo.id };
+    dispatch(editTodo(newTodo));
     event.target.reset();
     dispatch(setIsEditing());
   };
