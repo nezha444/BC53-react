@@ -1,7 +1,10 @@
+import { useSelector } from 'react-redux';
 import { Outlet } from 'react-router-dom';
+import { selectIsLoggedIn } from 'redux/auth/authSeletors';
 import { StyledLink } from './Layout.styled';
 
 export const Layout = () => {
+  const isLoggedIn = useSelector(selectIsLoggedIn);
   return (
     <>
       <header>
@@ -10,18 +13,24 @@ export const Layout = () => {
             <li>
               <StyledLink to="/">Home</StyledLink>
             </li>
-            <li>
-              <StyledLink to="/todos">Todos</StyledLink>
-            </li>
-            <li>
-              <StyledLink to="/gallery">Gallery</StyledLink>
-            </li>
-            <li>
-              <StyledLink to="/cocktail">Cocktail</StyledLink>
-            </li>
-            <li>
-              <StyledLink to="/register">Registration</StyledLink>
-            </li>
+            {isLoggedIn ? (
+              <>
+                <li>
+                  <StyledLink to="/todos">Todos</StyledLink>
+                </li>
+                <li>
+                  <StyledLink to="/gallery">Gallery</StyledLink>
+                </li>
+                <li>
+                  <StyledLink to="/cocktail">Cocktail</StyledLink>
+                </li>
+              </>
+            ) : (
+              <li>
+                <StyledLink to="/register">Registration</StyledLink>
+              </li>
+            )}
+            
           </ul>
         </nav>
       </header>

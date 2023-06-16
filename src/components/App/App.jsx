@@ -8,9 +8,23 @@ import CocktailDetailPage from 'pages/CocktailDetailPage/CocktailDetailPage';
 import { RegisterPage } from 'pages/RegisterPage';
 import { RestrictedRoute } from 'components/RestrictedRoute/RestrictedRoute';
 import { PrivateRoute } from 'components/PrivateRoute/PrivateRoute';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { refreshUser } from 'redux/auth/authOperations';
+import { selectIsRefresher } from 'redux/auth/authSeletors';
+
+
 
 export const App = () => {
-  return (
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(refreshUser())
+  }, [dispatch])
+  
+  const isRefresher = useSelector(selectIsRefresher);
+
+   return ( isRefresher ? <p>User contacts are loading</p> : 
+    
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<HomePage />} />
