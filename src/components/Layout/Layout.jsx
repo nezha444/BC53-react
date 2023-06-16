@@ -19,6 +19,9 @@ export const Layout = () => {
             <li>
               <StyledLink to="/cocktail">Cocktail</StyledLink>
             </li>
+            <li>
+              <StyledLink to="/register">Registration</StyledLink>
+            </li>
           </ul>
         </nav>
       </header>
