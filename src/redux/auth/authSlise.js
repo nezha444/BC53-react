@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { register } from './authOperations';
+import { refreshUser, register } from './authOperations';
 
 const initialState = {
   user: { name: null, number: null },
@@ -17,7 +17,18 @@ export const authSlise = createSlice({
       state.token = payload.token;
       state.isLoggedIn = true;
     },
+    [refreshUser.pending]:(state,)=>{
+      state.isRefresher=true;
+    },
+    [refreshUser.fulfilled]:(state,{payload})=>{
+      state.isRefresher=false;
+      state.isLoggedIn=true;
+      state.user=payload
+    },
+    [refreshUser.rejected]:(state,)=>{
+      state.isRefresher=false;
+    },
   },
 });
 
-export const authReduser = authSlise.reducer;
+export const authReducer = authSlise.reducer;

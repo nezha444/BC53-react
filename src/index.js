@@ -7,7 +7,8 @@ import { App } from 'components';
 import { GlobalStyles, theme } from 'styles';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import {store} from './redux/store'
+import { persistor, store } from './redux/store';
+import { PersistGate } from 'redux-persist/integration/react';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   // <React.StrictMode>
@@ -15,7 +16,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <ThemeProvider theme={theme}>
       <Global styles={GlobalStyles} />
       <Provider store={store}>
-        <App />
+        <PersistGate loading={null} persistor={persistor}>
+          <App />
+        </PersistGate>
       </Provider>
     </ThemeProvider>
   </BrowserRouter>
